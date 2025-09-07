@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "mocha": "^11.7.2",
+    "selenium-webdriver": "^4.35.0"
+  },
+  "scripts": {
+    "test:ui": "mocha tests/*.test.js --timeout 60000"
+  }
+}
