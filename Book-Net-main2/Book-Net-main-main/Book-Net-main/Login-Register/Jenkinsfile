@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs "NodeJS"  // Make sure NodeJS is configured in Jenkins
+    }
+
+    environment {
+        CLIENT_DIR = 'Login-register/client'
+        SERVER_DIR = 'Login-register/server'
+        TESTS_DIR = 'Login-register/tests'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/tharukadissanayaka/QA.git'  // Replace with your Git repo
+            }
+        }
+
+        stage('Install Server Dependencies') {
+            steps {
+                dir("${SERVER_DIR}") {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Install Client Dependencies') {
+            steps {
+                dir("${CLIENT_DIR}") {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build Client') {
+            steps {
+                dir("${CLIENT_DIR}") {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Run Server Unit Tests') {
+            steps {
+                dir("${SERVER_DIR}") {
+                    sh 'npm test'
+                }
+            }
+            post {
+                always {
+                    junit "${SERVER_DIR}/reports/**/*.xml"  // adjust if needed
+                }
+            }
+        }
+
+        stage('Run Client Unit Tests') {
+            steps {
+                dir("${CLIENT_DIR}") {
+                    sh 'npm test'
+                }
+            }
+        }
+
+        stage('Run Automation Tests') {
+            steps {
+                dir("${TESTS_DIR}") {
+                    sh 'npm install'
+                    sh 'npm run test' // or 'npm run test:e2e' depending on your test script
+                }
+            }
+            post {
+                always {
+                    publishHTML(target: [
+                        reportDir: "${TESTS_DIR}/reports",
+                        reportFiles: 'index.html',
+                        reportName: 'Automation Test Report'
+                    ])
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD pipeline completed successfully!'
+        }
+        failure {
+            echo 'CI/CD pipeline failed.'
+        }
+    }
+}
