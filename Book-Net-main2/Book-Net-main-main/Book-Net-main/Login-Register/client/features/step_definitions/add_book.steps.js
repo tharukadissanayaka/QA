@@ -13,7 +13,7 @@ After(async function () {
 });
 
 Given("I am on the admin page", async function () {
-  await driver.get("http://localhost:5175/admin"); // your Vite dev server
+  await driver.get("http://localhost:5173/admin"); // your Vite dev server
 });
 
 When("I fill the add book form with valid data", async function () {
