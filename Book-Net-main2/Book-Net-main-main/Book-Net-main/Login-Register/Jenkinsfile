@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs "NodeJS"  // Make sure NodeJS is configured in Jenkins
+        nodejs "NodeJS" // Make sure NodeJS is configured in Jenkins
     }
 
     environment {
@@ -12,17 +12,10 @@ pipeline {
     }
 
     stages {
-        /*
-       stage('Checkout') {
-             steps {
-                 git branch: 'main', url: 'https://github.com/tharukadissanayaka/QA.git'
-            }}*/
-
-
         stage('Install Server Dependencies') {
             steps {
                 dir("${SERVER_DIR}") {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
@@ -30,7 +23,7 @@ pipeline {
         stage('Install Client Dependencies') {
             steps {
                 dir("${CLIENT_DIR}") {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
@@ -38,7 +31,7 @@ pipeline {
         stage('Build Client') {
             steps {
                 dir("${CLIENT_DIR}") {
-                    sh 'npm run build'
+                    bat 'npm run build'
                 }
             }
         }
@@ -46,12 +39,12 @@ pipeline {
         stage('Run Server Unit Tests') {
             steps {
                 dir("${SERVER_DIR}") {
-                    sh 'npm test'
+                    bat 'npm test'
                 }
             }
             post {
                 always {
-                    junit "${SERVER_DIR}/reports/**/*.xml"  // adjust if needed
+                    junit "${SERVER_DIR}/reports/**/*.xml" // adjust if your tests generate XML reports
                 }
             }
         }
@@ -59,7 +52,7 @@ pipeline {
         stage('Run Client Unit Tests') {
             steps {
                 dir("${CLIENT_DIR}") {
-                    sh 'npm test'
+                    bat 'npm test'
                 }
             }
         }
@@ -67,8 +60,8 @@ pipeline {
         stage('Run Automation Tests') {
             steps {
                 dir("${TESTS_DIR}") {
-                    sh 'npm install'
-                    sh 'npm run test' // or 'npm run test:e2e' depending on your test script
+                    bat 'npm install'
+                    bat 'npm run test' // or 'npm run test:e2e' depending on your script
                 }
             }
             post {
@@ -92,3 +85,4 @@ pipeline {
         }
     }
 }
+
