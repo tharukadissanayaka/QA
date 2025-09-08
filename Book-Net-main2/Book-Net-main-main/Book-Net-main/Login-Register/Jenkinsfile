@@ -60,7 +60,7 @@ pipeline {
         stage('Run Automation Tests') {
             steps {
                 dir("${TESTS_DIR}") {
-                    bat 'npm install'
+                   
                     bat 'npm run test' // or 'npm run test:e2e' depending on your script
                 }
             }
