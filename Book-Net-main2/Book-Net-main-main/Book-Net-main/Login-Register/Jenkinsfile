@@ -12,11 +12,12 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/tharukadissanayaka/QA.git'  // Replace with your Git repo
-            }
-        }
+        /*
+       stage('Checkout') {
+             steps {
+                 git branch: 'main', url: 'https://github.com/tharukadissanayaka/QA.git'
+            }}*/
+
 
         stage('Install Server Dependencies') {
             steps {
