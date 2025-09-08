@@ -2,41 +2,41 @@ name: MERN CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]       # runs when you push to main
   pull_request:
-    branches: [ main ]
+    branches: [ main ]       # runs when a pull request is made to main
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest   # Linux server
 
     steps:
-      # 1. Checkout code
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
+      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 3. Install server dependencies
+      # Step 3: Install server dependencies
       - name: Install server dependencies
         run: npm install
         working-directory: ./server
 
-      # 4. Install client dependencies
+      # Step 4: Install client dependencies
       - name: Install client dependencies
         run: npm install
         working-directory: ./client
 
-      # 5. Build client
-      - name: Build client
+      # Step 5: Build client
+      - name: Build React client
         run: npm run build
         working-directory: ./client
 
-      # 6. Run backend tests (from tests folder)
+      # Step 6: Run backend tests
       - name: Run backend tests
         run: npm test -- --watchAll=false
         working-directory: ./tests
