@@ -44,7 +44,8 @@ pipeline {
             }
             post {
                 always {
-                    junit "${SERVER_DIR}/reports/**/*.xml" // adjust if your tests generate XML reports
+                    junit "${SERVER_DIR}/reports/server-test-results.xml"
+
                 }
             }
         }
