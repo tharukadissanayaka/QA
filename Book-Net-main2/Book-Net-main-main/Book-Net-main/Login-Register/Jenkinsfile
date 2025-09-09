@@ -39,13 +39,16 @@ pipeline {
         stage('Run Server Unit Tests') {
             steps {
                 dir("${SERVER_DIR}") {
-                    // Run Mocha tests with JUnit reporter
+                    // Ensure reports folder exists
+                    bat 'mkdir reports || exit 0'
+                    // Run server tests with JUnit reporter
                     bat 'npm test'
                 }
             }
             post {
                 always {
-                    junit "${SERVER_DIR}/reports/server-test-results.xml"
+                    // Use wildcard to ensure XML is found
+                    junit "${SERVER_DIR}/reports/*.xml"
                 }
             }
         }
@@ -53,13 +56,16 @@ pipeline {
         stage('Run Client UI Tests') {
             steps {
                 dir("${CLIENT_DIR}") {
-                    // Run Selenium WebDriver tests
+                    // Ensure reports folder exists
+                    bat 'mkdir reports || exit 0'
+                    // Run Selenium WebDriver UI tests
                     bat 'npm run test:ui'
                 }
             }
             post {
                 always {
-                    junit "${CLIENT_DIR}/reports/client-ui-results.xml"
+                    // Use wildcard in case multiple XML files exist
+                    junit "${CLIENT_DIR}/reports/*.xml"
                 }
             }
         }
@@ -67,13 +73,14 @@ pipeline {
         stage('Run Automation / BDD Tests') {
             steps {
                 dir("${CLIENT_DIR}") {
-                    // Run Cucumber BDD tests
+                    bat 'mkdir reports || exit 0'
+                    // Run Cucumber BDD tests with JUnit output
                     bat 'npm run test:automation'
                 }
             }
             post {
                 always {
-                    junit "${CLIENT_DIR}/reports/automation-results.xml"
+                    junit "${CLIENT_DIR}/reports/*.xml"
                 }
             }
         }
@@ -88,3 +95,4 @@ pipeline {
         }
     }
 }
+
