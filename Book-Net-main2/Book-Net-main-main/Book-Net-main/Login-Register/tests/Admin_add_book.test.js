@@ -1,6 +1,6 @@
 // tests/admin_add_book.test.js
 
-const { Builder, By, until, Key } = require("selenium-webdriver");
+const { Builder, By, until } = require("selenium-webdriver");
 const assert = require("assert");
 
 describe("Admin Add Book UI Test", function () {
@@ -47,10 +47,14 @@ describe("Admin Add Book UI Test", function () {
     const addButton = await driver.findElement(By.css("button[type='submit']"));
     await addButton.click();
 
-    // 6️⃣ Handle alert popup (Selling Book added!)
-    await driver.wait(until.alertIsPresent(), 5000);
-    const alert = await driver.switchTo().alert();
-    await alert.accept(); // Click OK
+    // 6️⃣ Wait for success message instead of alert
+    const successMessage = await driver.wait(
+      until.elementLocated(By.xpath("//*[contains(text(),'Selling Book added')]")),
+      5000
+    );
+
+    // Assert success message appears
+    assert.ok(await successMessage.getText());
 
     // 7️⃣ Wait for book to appear in the list
     const addedBookElement = await driver.wait(
@@ -60,7 +64,7 @@ describe("Admin Add Book UI Test", function () {
 
     const addedBookText = await addedBookElement.getText();
 
-    // 8️⃣ Assertion: check that title is present (ignore category and price)
+    // 8️⃣ Assertion: check that title is present
     assert.ok(addedBookText.includes("Selenium Test Book"));
   });
 });
