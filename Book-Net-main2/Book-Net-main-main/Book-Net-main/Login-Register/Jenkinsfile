@@ -71,13 +71,13 @@ pipeline {
         }
 
         stage('Run Automation / BDD Tests') {
-            steps {
-                dir("${CLIENT_DIR}") {
-                    bat 'mkdir reports || exit 0'
-                    // Run Cucumber BDD tests with JUnit output
-                    bat 'npm run test:automation'
-                }
-            }
+         steps {
+            dir("${CLIENT_DIR}") {
+            bat 'set CUCUMBER_PUBLISH_ENABLED=0 && npm run test:automation'
+           }
+        }
+
+
             post {
                 always {
                     junit "${CLIENT_DIR}/reports/*.xml"

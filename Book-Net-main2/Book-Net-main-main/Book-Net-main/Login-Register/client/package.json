@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "bdd:test": "cucumber-js --require features/step_definitions/**/*.js",
     "test:ui": "mocha ../tests/**/*.test.js --timeout 60000 --reporter mocha-junit-reporter --reporter-options mochaFile=reports/client-ui-results.xml",
-    "test:automation": "cucumber-js features/**/*.feature --require features/**/*.js --publish-quiet"
+    "test:automation": "cucumber-js features/**/*.feature --require features/**/*.js"
+
   },
   "dependencies": {
     "axios": "^1.11.0",
