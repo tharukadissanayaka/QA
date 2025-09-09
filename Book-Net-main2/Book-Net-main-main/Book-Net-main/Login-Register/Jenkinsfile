@@ -6,9 +6,9 @@ pipeline {
     }
 
     environment {
-        CLIENT_DIR = 'Login-register/client'
-        SERVER_DIR = 'Login-register/server'
-        TESTS_DIR = 'Login-register/tests'
+        CLIENT_DIR = 'Book-Net-main2/Book-Net-main-main/Book-Net-main/Login-Register/client'
+        SERVER_DIR = 'Book-Net-main2/Book-Net-main-main/Book-Net-main/Login-Register/server'
+        TESTS_DIR  = 'Book-Net-main2/Book-Net-main-main/Book-Net-main/Login-Register/tests'
     }
 
     stages {
