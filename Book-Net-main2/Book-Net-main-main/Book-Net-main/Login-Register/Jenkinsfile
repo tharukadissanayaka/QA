@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs "NodeJS" // Make sure NodeJS is configured in Jenkins
+        nodejs "NodeJS" // Ensure NodeJS is configured in Jenkins
     }
 
     environment {
@@ -39,39 +39,41 @@ pipeline {
         stage('Run Server Unit Tests') {
             steps {
                 dir("${SERVER_DIR}") {
+                    // Run Mocha tests with JUnit reporter
                     bat 'npm test'
                 }
             }
             post {
                 always {
                     junit "${SERVER_DIR}/reports/server-test-results.xml"
-
                 }
             }
         }
 
-        stage('Run Client Unit Tests') {
+        stage('Run Client UI Tests') {
             steps {
                 dir("${CLIENT_DIR}") {
-                    bat 'npm test'
-                }
-            }
-        }
-
-        stage('Run Automation Tests') {
-            steps {
-                dir("${TESTS_DIR}") {
-                   
-                    bat 'npm run test' // or 'npm run test:e2e' depending on your script
+                    // Run Selenium WebDriver tests
+                    bat 'npm run test:ui'
                 }
             }
             post {
                 always {
-                    publishHTML(target: [
-                        reportDir: "${TESTS_DIR}/reports",
-                        reportFiles: 'index.html',
-                        reportName: 'Automation Test Report'
-                    ])
+                    junit "${CLIENT_DIR}/reports/client-ui-results.xml"
+                }
+            }
+        }
+
+        stage('Run Automation / BDD Tests') {
+            steps {
+                dir("${CLIENT_DIR}") {
+                    // Run Cucumber BDD tests
+                    bat 'npm run test:automation'
+                }
+            }
+            post {
+                always {
+                    junit "${CLIENT_DIR}/reports/automation-results.xml"
                 }
             }
         }
@@ -86,4 +88,3 @@ pipeline {
         }
     }
 }
-
