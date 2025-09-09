@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.089" tests="2" failures="0">
+  <testsuite name="Root Suite" timestamp="2025-09-09T18:32:31" tests="0" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Book API - TDD Example" timestamp="2025-09-09T18:32:31" tests="2" file="C:\Users\Tharuka Dissanayake\Documents\GitHub\QA\Book-Net-main2\Book-Net-main-main\Book-Net-main\Login-Register\server\tests\book.test.js" time="0.088" failures="0">
+    <testcase name="Book API - TDD Example Add a new book - should fail without title" time="0.040" classname="Add a new book - should fail without title">
+    </testcase>
+    <testcase name="Book API - TDD Example Add a new book - should succeed with valid data" time="0.017" classname="Add a new book - should succeed with valid data">
+    </testcase>
+  </testsuite>
+</testsuites>
