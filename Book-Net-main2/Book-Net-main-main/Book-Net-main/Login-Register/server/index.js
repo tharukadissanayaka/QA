@@ -2,12 +2,27 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const { body, validationResult } = require('express-validator'); // ← ADD THIS LINE
+
+// Import validation middleware
+
+const { 
+    validateBook, 
+    validateUser, 
+    validateEmailParam, 
+    validateObjectId, 
+    validateCartItem, 
+    handleValidationErrors 
+} = require('./middleware/validation');
+
+
 // Models
 const Employeemodel = require("./models/Employee");
 const Cartmodel = require("./models/Cart");
 const OrderModel = require("./models/Order");
 const BooksModel = require("./models/Books");
 const ReadingBooksModel = require("./models/ReadingBooks");
+
 
 const app = express();
 app.use(cors());
@@ -16,29 +31,34 @@ app.use(express.json());
 // -------------------- AUTH & USER --------------------
 
 // Register
+
 app.post('/register', (req, res) => {
     Employeemodel.create(req.body)
         .then(employees => res.json(employees))
         .catch(err => res.json(err));
 });
 
+
 // Login
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     if (email === "admin@booknet.com" && password === "12345") {
         return res.json({ status: "Success", role: "admin" });
     }
 
-    Employeemodel.findOne({ email })
-        .then(user => {
-            if (!user) return res.json({ status: "Fail", message: "User not found" });
-            if (user.password !== password) return res.json({ status: "Fail", message: "Incorrect password" });
-            res.json({ status: "Success", role: "user" });
-        })
-        .catch(err => res.json({ status: "Error", message: err.message }));
+    try {
+        const user = await Employeemodel.findOne({ email });
+        if (!user) return res.json({ status: "Fail", message: "User not found" });
+        
+        const isPasswordCorrect = await user.correctPassword(password, user.password);
+        if (!isPasswordCorrect) return res.json({ status: "Fail", message: "Incorrect password" });
+        
+        res.json({ status: "Success", role: "user" });
+    } catch (err) {
+        res.json({ status: "Error", message: err.message });
+    }
 });
-
 // -------------------- CART --------------------
 
 // Add to cart
@@ -96,6 +116,7 @@ app.post('/order/confirm', async (req, res) => {
 // -------------------- BOOKS (TDD READY) --------------------
 
 // Add book
+/*
 app.post("/books", async (req, res) => {
     try {
         const { title, author, price, category, image } = req.body;
@@ -110,7 +131,7 @@ app.post("/books", async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Server error" });
     }
-});
+});*/
 
 // Get books
 app.get("/books", async (req, res) => {
@@ -195,6 +216,60 @@ app.delete("/newbooks/:id", async (req, res) => {
         res.status(500).json(err);
     }
 });
+
+
+
+
+// Secure register route
+
+app.post('/register', [
+    body('name').notEmpty().trim().escape(),
+    body('email').isEmail().normalizeEmail(),
+    body('password').isLength({ min: 6 }),
+    handleValidationErrors
+], (req, res) => {
+    Employeemodel.create(req.body)
+        .then(employees => res.json(employees))
+        .catch(err => res.json(err));
+});
+
+// Secure cart routes
+app.get('/cart/:email', [
+    validateEmailParam,
+    handleValidationErrors
+], (req, res) => {
+    Cartmodel.find({ email: req.params.email })
+        .then(items => res.json(items))
+        .catch(err => res.status(500).json(err));
+});
+
+// Secure book routes
+app.post("/books", [
+    validateBook,
+    handleValidationErrors
+], async (req, res) => {
+    try {
+        const { title, author, price, category, image } = req.body;
+        const book = await BooksModel.create({ title, author, price, category, image });
+        res.status(201).json(book);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// Secure ID-based routes
+app.delete("/books/:id", [
+    validateObjectId,
+    handleValidationErrors
+], async (req, res) => {
+    try {
+        await BooksModel.findByIdAndDelete(req.params.id);
+        res.json({ message: "Book deleted" });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}); 
 
 // -------------------- MONGOOSE & SERVER --------------------
 
