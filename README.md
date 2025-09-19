@@ -2,7 +2,7 @@
 ------------------
 Book Net is a software testing and quality assurance project designed to ensure the reliability, usability, and performance of a book management platform. The system allows users to explore, add, update, and manage books while providing a structured environment to apply QA methodologies.
 
-🎯 Project Objective
+ Project Objective
 ----------------------
 The main objective of Book Net is not just to implement a functional book management system, but to serve as a case study for Software Testing and Quality Assurance (QA) practices. The project emphasizes:
 
@@ -12,19 +12,19 @@ Ensuring quality standards are met in terms of usability, performance, and secur
 
 Demonstrating how defects are identified, documented, and resolved in a real-world scenario.
 
-✨ Features
+ Features
 --------------
-📖 Add, view, edit, and delete books.
+-> Add, view, edit, and delete books.
 
-🔍 Search and filter books by title, author, or category.
+-> Search and filter books by title, author, or category.
 
-👤 User management (sign up / log in).
+-> User management (sign up / log in).
 
-📊 Test cases and bug reports created for QA.
+-> Test cases and bug reports created for QA.
 
-✅ Functional, non-functional, and regression testing coverage.
+-> Functional, non-functional, and regression testing coverage.
 
-🧪 Testing & QA Scope
+ Testing & QA Scope
 -------------------------
 Functional Testing → Verify CRUD operations for books, authentication, and search functionality.
 
@@ -34,11 +34,11 @@ Performance Testing → Measure response time and scalability.
 
 Security Testing → Validate login/authentication and data protection.
 
-Automation → Selenium / Cypress 
+Automation → Selenium 
 
 Defect Tracking → Using tools like JIRA / GitHub Issues for bug reporting.
 
-🛠️ Tech Stack
+ Tech Stack
 ----------------
 Frontend: ReactJS, HTML, CSS
 
